@@ -1,5 +1,5 @@
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_smbus_ex.o: \
- ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_smbus_ex.c \
+Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_can.o: \
+ ../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_can.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -21,6 +21,7 @@ Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_smbus_ex.o: \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_adc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc_ex.h \
+ ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_can.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_crc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_crc_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_exti.h \
@@ -31,8 +32,6 @@ Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_smbus_ex.o: \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc_ex.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_smbus.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_smbus_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
@@ -58,6 +57,7 @@ Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_smbus_ex.o: \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_adc.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc_ex.h:
+../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_can.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_crc.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_crc_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_exti.h:
@@ -68,8 +68,6 @@ Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_smbus_ex.o: \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc_ex.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_smbus.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_smbus_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:

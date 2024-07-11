@@ -26,7 +26,11 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define  PERIOD_VALUE       (uint32_t)(666 - 1)  /* Period Value  */
+#define  PULSE1_VALUE       (uint32_t)(PERIOD_VALUE/2)        /* Capture Compare 1 Value  */
+#define  PULSE2_VALUE       (uint32_t)(PERIOD_VALUE*37.5/100) /* Capture Compare 2 Value  */
+#define  PULSE3_VALUE       (uint32_t)(PERIOD_VALUE/4)        /* Capture Compare 3 Value  */
+#define  PULSE4_VALUE       (uint32_t)(PERIOD_VALUE*12.5/100) /* Capture Compare 4 Value  */
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -59,12 +63,13 @@
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
-CRC_HandleTypeDef hcrc;
+CAN_HandleTypeDef hcan1;
 
-SMBUS_HandleTypeDef hsmbus1;
+CRC_HandleTypeDef hcrc;
 
 RTC_HandleTypeDef hrtc;
 
+TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim6;
 
 UART_HandleTypeDef huart2;
@@ -73,6 +78,8 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 
+
+// ADC variables
 float ta, tb; // transfer function using calibration data
 
 uint16_t adc_buffer[ADC_SAMPLES * 2 * 2] = { 0 }; // ADC_SAMPLES samples, 2 channels, 2 buffers
@@ -87,6 +94,9 @@ float vref = 0; // Result of vref calculation
 float temp = 0; // Result of temp calculation
 float corr_temp = 0;	// Result of scaling temp by the voltage difference between cal and operational ADC ref voltage
 
+// TIM1 / PWM variables
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -95,10 +105,11 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_ADC1_Init(void);
-static void MX_I2C1_SMBUS_Init(void);
 static void MX_RTC_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_CRC_Init(void);
+static void MX_TIM1_Init(void);
+static void MX_CAN1_Init(void);
 /* USER CODE BEGIN PFP */
 
 float CalcTemp(uint8_t);
@@ -200,6 +211,7 @@ void calculate_calibration() {
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -225,11 +237,22 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_ADC1_Init();
-  MX_I2C1_SMBUS_Init();
   MX_RTC_Init();
   MX_TIM6_Init();
   MX_CRC_Init();
+  MX_TIM1_Init();
+  MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
+
+  // TODO read up on this and see if this actually makes any sense at all to use.  Advice from the stackexchange post on PWM operation.
+  //memset(&sConfigOC, 0, sizeof(sConfigOC));
+
+
+  // TODO setup PWM
+  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+  // HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
+
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 
   printf("\n\nStarting\n");
   printf("VREFINT_CAL = %d (0x%04x)\r\n", (uint16_t)*VREFINT_CAL_ADDR, (uint16_t)*VREFINT_CAL_ADDR);
@@ -406,6 +429,43 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief CAN1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CAN1_Init(void)
+{
+
+  /* USER CODE BEGIN CAN1_Init 0 */
+
+  /* USER CODE END CAN1_Init 0 */
+
+  /* USER CODE BEGIN CAN1_Init 1 */
+
+  /* USER CODE END CAN1_Init 1 */
+  hcan1.Instance = CAN1;
+  hcan1.Init.Prescaler = 16;
+  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan1.Init.TimeTriggeredMode = DISABLE;
+  hcan1.Init.AutoBusOff = DISABLE;
+  hcan1.Init.AutoWakeUp = DISABLE;
+  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.ReceiveFifoLocked = DISABLE;
+  hcan1.Init.TransmitFifoPriority = DISABLE;
+  if (HAL_CAN_Init(&hcan1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CAN1_Init 2 */
+
+  /* USER CODE END CAN1_Init 2 */
+
+}
+
+/**
   * @brief CRC Initialization Function
   * @param None
   * @retval None
@@ -433,44 +493,6 @@ static void MX_CRC_Init(void)
   /* USER CODE BEGIN CRC_Init 2 */
 
   /* USER CODE END CRC_Init 2 */
-
-}
-
-/**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_I2C1_SMBUS_Init(void)
-{
-
-  /* USER CODE BEGIN I2C1_Init 0 */
-
-  /* USER CODE END I2C1_Init 0 */
-
-  /* USER CODE BEGIN I2C1_Init 1 */
-
-  /* USER CODE END I2C1_Init 1 */
-  hsmbus1.Instance = I2C1;
-  hsmbus1.Init.Timing = 0x00707CBB;
-  hsmbus1.Init.AnalogFilter = SMBUS_ANALOGFILTER_ENABLE;
-  hsmbus1.Init.OwnAddress1 = 2;
-  hsmbus1.Init.AddressingMode = SMBUS_ADDRESSINGMODE_7BIT;
-  hsmbus1.Init.DualAddressMode = SMBUS_DUALADDRESS_DISABLE;
-  hsmbus1.Init.OwnAddress2 = 0;
-  hsmbus1.Init.OwnAddress2Masks = SMBUS_OA2_NOMASK;
-  hsmbus1.Init.GeneralCallMode = SMBUS_GENERALCALL_DISABLE;
-  hsmbus1.Init.NoStretchMode = SMBUS_NOSTRETCH_DISABLE;
-  hsmbus1.Init.PacketErrorCheckMode = SMBUS_PEC_DISABLE;
-  hsmbus1.Init.PeripheralMode = SMBUS_PERIPHERAL_MODE_SMBUS_HOST;
-  hsmbus1.Init.SMBusTimeout = 0x00008186;
-  if (HAL_SMBUS_Init(&hsmbus1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
-
-  /* USER CODE END I2C1_Init 2 */
 
 }
 
@@ -507,6 +529,86 @@ static void MX_RTC_Init(void)
   /* USER CODE BEGIN RTC_Init 2 */
 
   /* USER CODE END RTC_Init 2 */
+
+}
+
+/**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 4096;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = 0;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.BreakFilter = 0;
+  sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
+  sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
+  sBreakDeadTimeConfig.Break2Filter = 0;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+  HAL_TIM_MspPostInit(&htim1);
 
 }
 

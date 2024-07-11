@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := SMBus
+BUILD_ARTIFACT_NAME := winstrument
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-SMBus.elf \
+winstrument.elf \
 
 MAP_FILES += \
-SMBus.map \
+winstrument.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-SMBus.list \
+winstrument.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: SMBus.elf secondary-outputs
+main-build: winstrument.elf secondary-outputs
 
 # Tool invocations
-SMBus.elf SMBus.map: $(OBJS) $(USER_OBJS) /home/willanth/STM32CubeIDE/workspace_1.12.0/SMBus/STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "SMBus.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/willanth/STM32CubeIDE/workspace_1.12.0/SMBus/STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SMBus.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+winstrument.elf winstrument.map: $(OBJS) $(USER_OBJS) C:\Users\willa\Documents\Project\ Data\winstruments\STM32\STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "winstrument.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\willa\Documents\Project Data\winstruments\STM32\STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="winstrument.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-SMBus.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "SMBus.list"
+winstrument.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "winstrument.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) SMBus.elf SMBus.list SMBus.map default.size.stdout
+	-$(RM) default.size.stdout winstrument.elf winstrument.list winstrument.map
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

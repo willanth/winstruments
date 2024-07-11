@@ -6,3 +6,18 @@ Garmin [[GPS17-N]] GPS Reciever
 Gill [[1390]] Ultrasonic Anemometer
 Vaisala [[DRD11]] Rain Sensor
 [[EQ8-E]] Solar Irradiance Sensor
+
+Communications Interface
+
+Interface and Control PCB
+
+
+Future expansion:
+Barometric Pressure Sensor
+
+Tipping Bucket Rain Gauge
+
+Soil Temperature Sensors (surface and 300mm)
+
+Solar Power System?
+
