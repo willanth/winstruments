@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "CoilcraftPCB")(type "Altium Designer")(uri "${KIPRJMOD}/CoilcraftPCB.PcbLib")(options "")(descr ""))
+)
